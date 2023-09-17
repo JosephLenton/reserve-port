@@ -1,0 +1,16 @@
+[package]
+name = "reserve-port"
+authors = ["Joseph Lenton <josephlenton@gmail.com>"]
+version = "1.0.0"
+edition = "2021"
+license = "MIT"
+description = "For finding free ports and reserving them"
+keywords = ["port", "scanner"]
+categories = []
+repository = "https://github.com/JosephLenton/reserve-port"
+documentation = "https://docs.rs/reserve-port/latest/reserve-port"
+readme = "README.md"
+
+[dependencies]
+thiserror = "1.0.48"
+lazy_static = "1.4.0"
