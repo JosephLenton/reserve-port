@@ -4,6 +4,9 @@ pub use self::port_finders::*;
 mod error;
 pub use self::error::*;
 
+mod find_unused_port;
+pub use self::find_unused_port::*;
+
 mod is_port_available;
 pub use self::is_port_available::*;
 
