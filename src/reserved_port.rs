@@ -6,7 +6,7 @@ use crate::Result;
 use crate::ReservedPortFinder;
 
 const MIN_PORT: u16 = 8_000;
-const MAX_PORT: u16 = 9_999;
+const MAX_PORT: u16 = 15_999;
 
 lazy_static! {
     static ref GLOBAL_PORT_FINDER: Mutex<ReservedPortFinder<MIN_PORT, MAX_PORT>> = Mutex::new(ReservedPortFinder::new());
@@ -31,12 +31,16 @@ impl ReservedPort {
     }
 
     pub fn random() -> Result<Self> {
+        Self::random_permanently_reserved()
+            .map(ReservedPort::new)
+    }
+
+    pub fn random_permanently_reserved() -> Result<u16> {
         let mut port_finder = GLOBAL_PORT_FINDER
             .lock()
             .map_err(|_| Error::InternalLockError)?;
 
         port_finder.reserve_random_port()
-            .map(ReservedPort::new)
             .ok_or(Error::FailedToReservePort)
     }
 
