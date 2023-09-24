@@ -1,16 +1,10 @@
-use ::std::sync::Mutex;
-use ::lazy_static::lazy_static;
+use ::std::net::IpAddr;
+use ::std::net::SocketAddr;
+use ::std::net::TcpListener;
 
+use crate::borrow_global_port_finder;
 use crate::Error;
 use crate::Result;
-use crate::ReservedPortFinder;
-
-const MIN_PORT: u16 = 8_000;
-const MAX_PORT: u16 = 15_999;
-
-lazy_static! {
-    static ref GLOBAL_PORT_FINDER: Mutex<ReservedPortFinder<MIN_PORT, MAX_PORT>> = Mutex::new(ReservedPortFinder::new());
-}
 
 /// A port, that at the time of creation, is guaranteed to be free for use by the OS.
 /// This also guarantees not to clash with _other_ `ReservedPort` objects.
@@ -24,23 +18,41 @@ pub struct ReservedPort {
 }
 
 impl ReservedPort {
-    fn new(port: u16) -> Self {
-        Self {
-            port,
-        }
+    pub(crate) fn new(port: u16) -> Self {
+        Self { port }
+    }
+
+    pub fn random_with_tcp<I>(ip: I) -> Result<(Self, TcpListener)>
+    where
+        I: Into<IpAddr>,
+    {
+        let (tcp_listener, socket_addr) = Self::random_permanently_reserved_tcp(ip)?;
+        let port = socket_addr.port();
+        let reserved_port = ReservedPort::new(port);
+
+        Ok((reserved_port, tcp_listener))
+    }
+
+    pub fn random_permanently_reserved_tcp<I>(ip: I) -> Result<(TcpListener, SocketAddr)>
+    where
+        I: Into<IpAddr>,
+    {
+        let mut port_finder = borrow_global_port_finder()?;
+
+        port_finder
+            .reserve_random_tcp(ip.into())
+            .ok_or(Error::FailedToReservePort)
     }
 
     pub fn random() -> Result<Self> {
-        Self::random_permanently_reserved()
-            .map(ReservedPort::new)
+        Self::random_permanently_reserved().map(ReservedPort::new)
     }
 
     pub fn random_permanently_reserved() -> Result<u16> {
-        let mut port_finder = GLOBAL_PORT_FINDER
-            .lock()
-            .map_err(|_| Error::InternalLockError)?;
+        let mut port_finder = borrow_global_port_finder()?;
 
-        port_finder.reserve_random_port()
+        port_finder
+            .reserve_random_port()
             .ok_or(Error::FailedToReservePort)
     }
 
@@ -50,9 +62,7 @@ impl ReservedPort {
     /// and wish to avoid clashing with this library.
     #[must_use]
     pub fn reserve_port(port: u16) -> Result<()> {
-        let mut port_finder = GLOBAL_PORT_FINDER
-            .lock()
-            .map_err(|_| Error::InternalLockError)?;
+        let mut port_finder = borrow_global_port_finder()?;
 
         port_finder.reserve_port(port);
 
@@ -66,13 +76,10 @@ impl ReservedPort {
 
 impl Drop for ReservedPort {
     fn drop(&mut self) {
-        let mut port_finder = GLOBAL_PORT_FINDER
-            .lock()
-            .map_err(|_| Error::InternalLockError)
-            .expect("Should be able to unlock global port finder");
+        let mut port_finder =
+            borrow_global_port_finder().expect("Should be able to unlock global port finder");
 
-        port_finder
-            .free_port(self.port);
+        port_finder.free_port(self.port);
     }
 }
 
