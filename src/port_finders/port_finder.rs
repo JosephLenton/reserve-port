@@ -5,7 +5,7 @@ use ::std::net::TcpListener;
 
 pub trait PortFinder {
     fn find_port(&mut self) -> Option<u16> {
-        self.find_port_for_ip(Ipv4Addr::UNSPECIFIED.into())
+        self.find_port_for_ip(Ipv4Addr::LOCALHOST.into())
             .map(|(_, socket_addr)| socket_addr.port())
     }
 

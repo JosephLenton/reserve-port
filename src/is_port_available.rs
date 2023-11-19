@@ -14,16 +14,16 @@ pub fn is_port_available(port: u16) -> bool {
 
 /// Check if a port is available on TCP.
 pub fn is_port_available_tcp(port: u16) -> bool {
-    let ipv4 = SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, port);
-    let ipv6 = SocketAddrV6::new(Ipv6Addr::UNSPECIFIED, port, 0, 0);
+    let ipv4 = SocketAddrV4::new(Ipv4Addr::LOCALHOST, port);
+    let ipv6 = SocketAddrV6::new(Ipv6Addr::LOCALHOST, port, 0, 0);
 
     bind_and_get_tcp_port(ipv6).is_some() && bind_and_get_tcp_port(ipv4).is_some()
 }
 
 /// Check if a port is available on UDP.
 pub fn is_port_available_udp(port: u16) -> bool {
-    let ipv4 = SocketAddrV4::new(Ipv4Addr::UNSPECIFIED, port);
-    let ipv6 = SocketAddrV6::new(Ipv6Addr::UNSPECIFIED, port, 0, 0);
+    let ipv4 = SocketAddrV4::new(Ipv4Addr::LOCALHOST, port);
+    let ipv6 = SocketAddrV6::new(Ipv6Addr::LOCALHOST, port, 0, 0);
 
     bind_and_get_udp_port(ipv6).is_some() && bind_and_get_udp_port(ipv4).is_some()
 }
