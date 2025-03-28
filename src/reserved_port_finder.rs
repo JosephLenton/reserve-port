@@ -1,22 +1,19 @@
 use crate::Error;
 use crate::PortFinder;
 use crate::ScanningWithFallbackPortFinder;
-
-use ::lazy_static::lazy_static;
 use ::std::collections::HashSet;
 use ::std::net::IpAddr;
 use ::std::net::SocketAddr;
 use ::std::net::TcpListener;
 use ::std::sync::Mutex;
+use std::sync::LazyLock;
 use std::sync::MutexGuard;
 
 const MIN_PORT: u16 = 8_000;
 const MAX_PORT: u16 = 15_999;
 
-lazy_static! {
-    static ref GLOBAL_PORT_FINDER: Mutex<ReservedPortFinder<MIN_PORT, MAX_PORT>> =
-        Mutex::new(ReservedPortFinder::new());
-}
+static GLOBAL_PORT_FINDER: LazyLock<Mutex<ReservedPortFinder<MIN_PORT, MAX_PORT>>> =
+    LazyLock::new(|| Mutex::new(ReservedPortFinder::new()));
 
 pub(crate) fn borrow_global_port_finder(
 ) -> Result<MutexGuard<'static, ReservedPortFinder<MIN_PORT, MAX_PORT>>, Error> {
