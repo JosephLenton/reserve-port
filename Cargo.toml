@@ -10,6 +10,7 @@ categories = []
 repository = "https://github.com/JosephLenton/reserve-port"
 documentation = "https://docs.rs/reserve-port/latest/reserve-port"
 readme = "README.md"
+rust-version = "1.80"
 
 [dependencies]
 thiserror = "2.0"
