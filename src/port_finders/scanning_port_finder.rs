@@ -59,8 +59,10 @@ mod tests_find_port {
 
     #[test]
     fn it_finds_a_random_port() {
-        assert!(ScanningPortFinder::<8000, 9999>::new()
-            .find_port()
-            .is_some());
+        assert!(
+            ScanningPortFinder::<8000, 9999>::new()
+                .find_port()
+                .is_some()
+        );
     }
 }

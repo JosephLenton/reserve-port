@@ -2,9 +2,9 @@ use ::std::net::IpAddr;
 use ::std::net::SocketAddr;
 use ::std::net::TcpListener;
 
-use crate::borrow_global_port_finder;
 use crate::Error;
 use crate::Result;
+use crate::borrow_global_port_finder;
 
 /// A port, that at the time of creation, is guaranteed to be free for use by the OS.
 /// This also guarantees not to clash with _other_ `ReservedPort` objects.

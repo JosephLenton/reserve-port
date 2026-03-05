@@ -15,8 +15,8 @@ const MAX_PORT: u16 = 15_999;
 static GLOBAL_PORT_FINDER: LazyLock<Mutex<ReservedPortFinder<MIN_PORT, MAX_PORT>>> =
     LazyLock::new(|| Mutex::new(ReservedPortFinder::new()));
 
-pub(crate) fn borrow_global_port_finder(
-) -> Result<MutexGuard<'static, ReservedPortFinder<MIN_PORT, MAX_PORT>>, Error> {
+pub(crate) fn borrow_global_port_finder()
+-> Result<MutexGuard<'static, ReservedPortFinder<MIN_PORT, MAX_PORT>>, Error> {
     let port_finder = GLOBAL_PORT_FINDER
         .lock()
         .map_err(|_| Error::InternalLockError)?;
