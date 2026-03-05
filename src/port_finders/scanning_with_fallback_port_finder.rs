@@ -27,3 +27,9 @@ impl<const MIN: u16, const MAX: u16> PortFinder for ScanningWithFallbackPortFind
             .or_else(|| self.random.find_port_for_ip(ip))
     }
 }
+
+impl<const MIN: u16, const MAX: u16> Default for ScanningWithFallbackPortFinder<MIN, MAX> {
+    fn default() -> Self {
+        Self::new()
+    }
+}

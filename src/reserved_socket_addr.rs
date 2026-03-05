@@ -14,7 +14,6 @@ pub struct ReservedSocketAddr {
 }
 
 impl ReservedSocketAddr {
-    #[must_use]
     pub fn reserve_random_socket_addr() -> Result<Self> {
         let ip_address = DEFAULT_IP_ADDRESS;
         let reserved_port = ReservedPort::random()?;

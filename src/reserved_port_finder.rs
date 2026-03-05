@@ -85,3 +85,9 @@ impl<const MIN: u16, const MAX: u16> ReservedPortFinder<MIN, MAX> {
         self.ports_in_use.remove(&port);
     }
 }
+
+impl<const MIN: u16, const MAX: u16> Default for ReservedPortFinder<MIN, MAX> {
+    fn default() -> Self {
+        Self::new()
+    }
+}

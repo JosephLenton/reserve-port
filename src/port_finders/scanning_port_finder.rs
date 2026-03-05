@@ -53,6 +53,12 @@ impl<const MIN: u16, const MAX: u16> PortFinder for ScanningPortFinder<MIN, MAX>
     }
 }
 
+impl<const MIN: u16, const MAX: u16> Default for ScanningPortFinder<MIN, MAX> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[cfg(test)]
 mod tests_find_port {
     use super::*;

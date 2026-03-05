@@ -60,7 +60,6 @@ impl ReservedPort {
     ///
     /// This is useful if you have connected to a socket yourself,
     /// and wish to avoid clashing with this library.
-    #[must_use]
     pub fn reserve_port(port: u16) -> Result<()> {
         let mut port_finder = borrow_global_port_finder()?;
 

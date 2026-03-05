@@ -8,6 +8,7 @@ use crate::bind_and_get_tcp;
 const NUM_TRIES: usize = 100;
 
 /// A `PortFinder` which will ask the OS for the port.
+#[derive(Default)]
 pub struct OsQueryPortFinder {}
 
 impl OsQueryPortFinder {
