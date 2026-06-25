@@ -1,9 +1,12 @@
+use crate::ReservedPort;
 use crate::Result;
 use ::std::net::IpAddr;
 use ::std::net::Ipv4Addr;
 use ::std::net::SocketAddr;
-
-use super::ReservedPort;
+use std::io::Result as IoResult;
+use std::iter::Once;
+use std::iter::once;
+use std::net::ToSocketAddrs;
 
 pub(crate) const DEFAULT_IP_ADDRESS: IpAddr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
 
@@ -35,5 +38,13 @@ impl ReservedSocketAddr {
 
     pub fn socket_addr(&self) -> SocketAddr {
         self.socket_addr
+    }
+}
+
+impl ToSocketAddrs for &ReservedSocketAddr {
+    type Iter = Once<SocketAddr>;
+
+    fn to_socket_addrs(&self) -> IoResult<Self::Iter> {
+        Ok(once(self.socket_addr))
     }
 }
