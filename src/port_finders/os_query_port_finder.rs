@@ -1,9 +1,8 @@
+use crate::PortFinder;
+use crate::bind_and_get_tcp;
 use ::std::net::IpAddr;
 use ::std::net::SocketAddr;
 use ::std::net::TcpListener;
-
-use super::PortFinder;
-use crate::bind_and_get_tcp;
 
 const NUM_TRIES: usize = 100;
 

@@ -1,10 +1,9 @@
+use crate::OsQueryPortFinder;
+use crate::PortFinder;
+use crate::ScanningPortFinder;
 use ::std::net::IpAddr;
 use ::std::net::SocketAddr;
 use ::std::net::TcpListener;
-
-use super::OsQueryPortFinder;
-use super::PortFinder;
-use super::ScanningPortFinder;
 
 pub struct ScanningWithFallbackPortFinder<const MIN: u16, const MAX: u16> {
     scanner: ScanningPortFinder<MIN, MAX>,
